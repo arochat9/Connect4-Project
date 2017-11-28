@@ -7,7 +7,7 @@ class User {
 
 const users = {};
 
-export new_user = User.constructor;
+export const new_user = User.constructor;
 export function add_user(user){
    var username = user.name;
    if( username == false )
