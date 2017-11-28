@@ -17,7 +17,7 @@ class Users {
       if( this.users[username] ){
          socket.emit('client-login-result', {
             result: 'failure',
-            reason: `User '${username}' already is logged in.`;
+            reason: `User '${username}' already is logged in.`
          });
          return false;
       } else {
