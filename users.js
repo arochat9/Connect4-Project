@@ -1,4 +1,4 @@
-export class User {
+exports.User = class {
    constructor(name, socket){
       this.name = name;
       this.socket = socket;
@@ -7,7 +7,7 @@ export class User {
 
 const _users = {};
 
-function add_user(user){
+expots.add_user = function(user){
    var username = user.name;
    if( username == false )
       return `Invalid username ${username}`;
