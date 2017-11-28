@@ -1,0 +1,16 @@
+#login_box {
+   background-color: #ddd;
+   position: fixed;
+
+   width: 25vw;
+
+   left: 50vw;
+   top: 50vh;
+   transform: translate(-50%, -50%);
+
+
+   border: 0.15em solid #555;
+   border-radius: 1em;
+   padding: .5in;
+   text-align: center;
+}

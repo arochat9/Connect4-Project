@@ -3,6 +3,7 @@
 <head>
    <!-- look into  attr scrollTop -->
    <title>Games online!</title>
+   <link rel="stylesheet" type="text/css" href="client.css" />
    <script src="/socket.io/socket.io.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
    <script type ="text/javascript">
@@ -11,14 +12,28 @@
    socketio.on("bar", (data) => {
       alert(JSON.stringify(data)); 
    });
+
    $(() => {
-      alert("a");
-      socketio.emit("foo", {bar: 1, baz: 2});
+      socketio.emit("client-startup", {});
    });
+
    </script>
 </head>
 
 <body>
-   test
+   <form id=login_box>
+      username:
+      <input type="text" id="username"/>
+      <button type=submit id=login_button>login</button>
+   </form>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
