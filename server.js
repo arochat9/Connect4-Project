@@ -1,14 +1,18 @@
-const app = require('./app.js'),
-      socketio = require('socket.io'),
-      io = socketio.listen(app);
-
-var users = {}
+const app = require('./app.js');
+const games = require('./games.js');
+const users = require('./users.js');
+const socketio = require('socket.io');
+const io = socketio.listen(app);
 
 io.sockets.on('connection', function(socket){
-   socket.on('client-startup', () => {
-      send_game_types(socket);
-      send_games_list(socket);
-   });
+   socket.on('client-startup', () => { /* nothing for now */ });
+   socket.on('client-login', (data) => {
+      var username = data['username'];
+      if( !users.login_user(username, socket) )
+         return;
+      games.send_types(socket);
+      games.send_active(socket);
+   })
 });
 
 console.log('Started up.');

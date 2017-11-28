@@ -15,6 +15,12 @@
 
    $(() => {
       socketio.emit("client-startup", {});
+      socketio.emit('client-login-attempt', {
+         username: 'sam'
+      });
+      socketio.on("client-login-result", (data) => {
+         alert(JSON.stringify(data));
+      });
    });
 
    </script>

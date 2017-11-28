@@ -1,6 +1,6 @@
-const PORT = 3456,
-      http = require('http'),
-      fs = require('fs');
+const PORT = 3456;
+const http = require('http');
+const fs = require('fs');
 
 const app = http.createServer(function(req, resp){
    var file_to_serve;
