@@ -15,14 +15,14 @@ class Users {
 
    login_user(username, socket){
       if( this.users[username] ){
-         socket.emit('client-login-result', {
+         socket.emit('login_result', {
             result: 'failure',
             reason: `User '${username}' already is logged in.`
          });
          return false;
       } else {
          this.add_user(username, socket);
-         socket.emit('client-login-result', {
+         socket.emit('login_result', {
             result: 'success',
             username: username
          });

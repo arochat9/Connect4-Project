@@ -5,8 +5,8 @@ const socketio = require('socket.io');
 const io = socketio.listen(app);
 
 io.sockets.on('connection', function(socket){
-   socket.on('client-startup', () => { /* nothing for now */ });
-   socket.on('client-login', (data) => {
+   socket.on('startup', () => { /* nothing for now */ });
+   socket.on('login-attempt', (data) => {
       var username = data['username'];
       if( !users.login_user(username, socket) )
          return;

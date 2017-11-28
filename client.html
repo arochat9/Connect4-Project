@@ -14,11 +14,11 @@
    });
 
    $(() => {
-      socketio.emit("client-startup", {});
-      socketio.emit('client-login-attempt', {
+      socketio.emit("startup", {});
+      socketio.emit('login_attempt', {
          username: 'sam'
       });
-      socketio.on("client-login-result", (data) => {
+      socketio.on("login_result", (data) => {
          alert(JSON.stringify(data));
       });
    });
