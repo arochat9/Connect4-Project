@@ -28,6 +28,7 @@ var io = socketio.listen(app);
 io.sockets.on('connection', function(socket){
    socket.on('foo', (data) => {
       data['bar'] = 99;
+      console.log(data);
       socket.emit('bar', data);
    });
    // socket.on('client-send-post',  (data) => { client_send_post(socket, data); });
