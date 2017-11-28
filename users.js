@@ -7,7 +7,6 @@ class User {
 
 const users = {};
 
-const new_user = User.constructor;
 function add_user(user){
    var username = user.name;
    if( username == false )
