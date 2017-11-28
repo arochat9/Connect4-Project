@@ -1,4 +1,4 @@
-class User {
+export class User {
    constructor(name, socket){
       this.name = name;
       this.socket = socket;
