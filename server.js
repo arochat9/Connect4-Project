@@ -1,5 +1,5 @@
 const socketio = require('socket.io');
-const app = require('app.js');
+const app = require('./app.js');
 
 var io = socketio.listen(app);
 io.sockets.on('connection', function(socket){
