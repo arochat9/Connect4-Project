@@ -7,8 +7,8 @@ class User {
 
 const users = {};
 
-export const new_user = User.constructor;
-export function add_user(user){
+const new_user = User.constructor;
+function add_user(user){
    var username = user.name;
    if( username == false )
       return `Invalid username ${username}`;
