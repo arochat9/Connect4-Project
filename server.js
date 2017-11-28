@@ -15,7 +15,7 @@ var app = http.createServer(function(req, resp){
    fs.readFile(file_to_serve, function(err, data){
       if(err)
          return resp.writeHead(500);
-      console.log(data);
+      console.log(data.toString());
       resp.writeHead(200);
       resp.end(data);
    });
