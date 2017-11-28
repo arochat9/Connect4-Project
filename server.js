@@ -7,7 +7,7 @@ const io = socketio.listen(app);
 io.sockets.on('connection', function(socket){
    socket.on('startup', () => { /* nothing for now */ });
    socket.on('login_attempt', (data) => {
-      var user = new User(data['username'], socket);
+      var user = users.new_user(data['username'], socket);
       var result = users.add_user(user);
       if( result === true ){
          socket.emit('login_result', { result: 'success', username: username });

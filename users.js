@@ -5,6 +5,7 @@ class User {
    }
 }
 
+new_user = User.constructor;
 function add_user(user){
    var username = user.name;
    if( username == false )
@@ -17,4 +18,4 @@ function add_user(user){
 
 const users = {};
 
-exports = { User: User, add_user: add_user };
+exports = [ add_user, new_user ];
