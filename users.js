@@ -1,3 +1,4 @@
+exports = module.exports;
 exports.User = class {
    constructor(name, socket){
       this.name = name;
