@@ -15,7 +15,6 @@ var app = http.createServer(function(req, resp){
    fs.readFile(file_to_serve, function(err, data){
       if(err)
          return resp.writeHead(500);
-      console.log(data.toString());
       resp.writeHead(200);
       resp.end(data);
    });
@@ -26,7 +25,7 @@ app.listen(PORT);
 
 var io = socketio.listen(app);
 io.sockets.on('connection', function(socket){
-   coonsole.log("socket joined: " + JSON.stringify(socket));
+   console.log("socket joined: " + JSON.stringify(socket));
    socket.on('foo', (data) => {
       data['bar'] = 99;
       console.log(data);
