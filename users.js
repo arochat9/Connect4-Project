@@ -5,7 +5,7 @@ class User {
    }
 }
 
-const users = {};
+const _users = {};
 
 function add_user(user){
    var username = user.name;
