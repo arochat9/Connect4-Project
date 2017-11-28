@@ -2,6 +2,7 @@ const app = require('./app.js');
 
 const socketio = require('socket.io');
 var io = socketio.listen(app);
+console.log('a');
 
 io.sockets.on('connection', function(socket){
    socket.on('foo', (data) => {
