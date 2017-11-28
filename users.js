@@ -16,3 +16,8 @@ function add_user(user){
    this.users[username] = user;
    return true;
 }
+
+module.exports = {
+   add_user: add_user,
+   User: User
+}
