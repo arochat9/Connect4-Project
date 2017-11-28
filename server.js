@@ -1,27 +1,5 @@
-const PORT = 3456 /* todo change */,
-      http = require('http'),
-      socketio = require('socket.io'),
-      fs = require('fs');
-
-/******************************************************************************/
-// setup
-var app = http.createServer(function(req, resp){
-   var file_to_serve;
-   if(req.url === '/client.css')
-      file_to_serve = 'client.css';
-   else
-      file_to_serve = 'client.html';
-
-   fs.readFile(file_to_serve, function(err, data){
-      if(err)
-         return resp.writeHead(500);
-      resp.writeHead(200);
-      resp.end(data);
-   });
-});
-
-
-app.listen(PORT);
+const socketio = require('socket.io'),
+const app = require('app.js');
 
 var io = socketio.listen(app);
 io.sockets.on('connection', function(socket){
