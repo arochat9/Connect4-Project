@@ -1,7 +1,8 @@
-const socketio = require('socket.io');
 const app = require('./app.js');
 
+const socketio = require('socket.io');
 var io = socketio.listen(app);
+
 io.sockets.on('connection', function(socket){
    socket.on('foo', (data) => {
       data['bar'] = 99;
