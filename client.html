@@ -6,11 +6,9 @@
    <script src="/socket.io/socket.io.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
    <script type ="text/javascript">
-
-   socketio.on("bar", (data) => {
-      alert(JSON.stringify(data));
-   });
+   // socketio.on("bar", (data) => { alert(JSON.stringify(data)); });
    $(() => {
+      alert("foo");
       socketio.emit("foo", {bar: 1, baz: 2});
    });
    </script>
