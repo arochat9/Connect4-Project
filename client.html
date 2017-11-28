@@ -7,11 +7,11 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
    <script type ="text/javascript">
 
-   socketio.on("bar", function(data){
+   socketio.on("bar", (data) => {
       alert(JSON.stringify(data));
    });
    $(() => {
-      socketio.emit("foo", {'bar': 1, 'baz': 2});
+      socketio.emit("foo", {bar: 1, baz: 2});
    });
    </script>
 </head>
