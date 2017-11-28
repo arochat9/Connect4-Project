@@ -9,25 +9,14 @@ class Users {
       this.users = {};
    }
 
-   add_user(username, socket){
-      this.users[username] = new User(username, socket);
-   }
-
-   login_user(username, socket){
-      if( this.users[username] ){
-         socket.emit('login_result', {
-            result: 'failure',
-            reason: `User '${username}' already is logged in.`
-         });
-         return false;
-      } else {
-         this.add_user(username, socket);
-         socket.emit('login_result', {
-            result: 'success',
-            username: username
-         });
-         return true;
-      }
+   add_user(user){
+      var username = user.name;
+      if( username == false )
+         return `Invalid username ${username}`;
+      if( this.users[username] )
+         return `User '${username}' already is logged in.`;
+      this.users[username] = user;
+      return true;
    }
 }
 

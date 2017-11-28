@@ -6,12 +6,16 @@ const io = socketio.listen(app);
 
 io.sockets.on('connection', function(socket){
    socket.on('startup', () => { /* nothing for now */ });
-   socket.on('login-attempt', (data) => {
-      var username = data['username'];
-      if( !users.login_user(username, socket) )
-         return;
-      games.send_types(socket);
-      games.send_active(socket);
+   socket.on('login_attempt', (data) => {
+      var user = new User(data['username'], socket);
+      var result = users.add_user(user);
+      if( result === true ){
+         socket.emit('login_result', { result: 'success', username: username });
+         games.send_types(user);
+         games.send_active(user);
+      } else {
+         socket.emit('login_result', { result: 'failure', jreason: result });
+      }
    })
 });
 
