@@ -10,6 +10,7 @@
       alert(JSON.stringify(data)); 
    });
    $(() => {
+      alert("a");
       socketio.emit("foo", {bar: 1, baz: 2});
    });
    </script>
