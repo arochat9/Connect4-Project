@@ -22,4 +22,4 @@ const app = http.createServer(function(req, resp){
 
 app.listen(PORT);
 
-module.export = app;
+module.exports = app;
