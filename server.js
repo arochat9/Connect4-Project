@@ -1,8 +1,7 @@
 const PORT = 3456 /* todo change */,
       http = require('http'),
       socketio = require('socket.io'),
-      fs = require('fs'),
-      crypto = require('crypto');
+      fs = require('fs');
 
 /******************************************************************************/
 // setup
@@ -16,6 +15,7 @@ var app = http.createServer(function(req, resp){
    fs.readFile(file_to_serve, function(err, data){
       if(err)
          return resp.writeHead(500);
+      console.log(data);
       resp.writeHead(200);
       resp.end(data);
    });
