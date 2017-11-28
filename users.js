@@ -1,4 +1,4 @@
-exports = module.exports;
+// exports = module.exports;
 exports.User = class {
    constructor(name, socket){
       this.name = name;
@@ -8,7 +8,7 @@ exports.User = class {
 
 const _users = {};
 
-expots.add_user = function(user){
+exports.add_user = function(user){
    var username = user.name;
    if( username == false )
       return `Invalid username ${username}`;
