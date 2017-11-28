@@ -1,4 +1,4 @@
-const PORT = 100,
+const PORT = 3456 /* todo change */,
       http = require('http'),
       socketio = require('socket.io'),
       fs = require('fs'),
