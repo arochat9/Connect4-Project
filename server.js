@@ -25,7 +25,6 @@ app.listen(PORT);
 
 var io = socketio.listen(app);
 io.sockets.on('connection', function(socket){
-   console.log("socket joined: " + JSON.stringify(socket));
    socket.on('foo', (data) => {
       data['bar'] = 99;
       console.log(data);
