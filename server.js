@@ -1,6 +1,8 @@
 const app = require('./app.js');
 const games = require('./games.js');
-const users = require('./users.js');
+const users = require('./users.js'); 
+   User = users.User;
+   users = users.user;
 const socketio = require('socket.io');
 const io = socketio.listen(app);
 

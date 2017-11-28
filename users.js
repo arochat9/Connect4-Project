@@ -20,4 +20,8 @@ class Users {
    }
 }
 
-users = Users.new
+const users = new Users();
+module.exports = {
+   user: User,
+   users: users
+}
