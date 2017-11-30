@@ -1,8 +1,8 @@
-#login_box {
+#login_popup {
    background-color: #ddd;
    position: fixed;
 
-   width: 25vw;
+   min-width: 25vw;
 
    left: 50vw;
    top: 50vh;
@@ -11,6 +11,29 @@
 
    border: 0.15em solid #555;
    border-radius: 1em;
-   padding: .5in;
+   padding: 5vh 3vw;
    text-align: center;
 }
+
+.error_box {
+   display: none;
+
+   background-color: #fdd;
+   color: #ff2660;
+
+   font-size: 1.25em;
+   text-align: center;
+
+   border: 0.1em solid #d55;
+   border-radius: .5em;
+   margin: .5em .5ex;
+   padding: .1em 1ex;
+}
+
+.chat_box::-webkit-input-placeholder::before {
+   content:"...";
+}
+
+
+
+

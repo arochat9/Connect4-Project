@@ -1,19 +1,18 @@
 // exports = module.exports;
-exports.User = class {
+class User {
    constructor(name, socket){
       this.name = name;
       this.socket = socket;
    }
 }
 
-const _users = {};
+const users = {};
 
-exports.add_user = function(user){
-   var username = user.name;
-   if( username == false )
+exports.add_user = function(username, socket){;
+   if( username == false ) // ie empty string, undefined, whatever
       return `Invalid username ${username}`;
-   if( this.users[username] )
+   else if( users[username] )
       return `User '${username}' already is logged in.`;
-   this.users[username] = user;
-   return true;
+   else 
+      return users[username] = new User(username, socket);
 }

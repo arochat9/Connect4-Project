@@ -3,43 +3,27 @@
 <head>
    <!-- look into  attr scrollTop -->
    <title>Games online!</title>
-   <link rel="stylesheet" type="text/css" href="client.css" />
-   <script src="/socket.io/socket.io.js"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   <script type ="text/javascript">
-   var socketio = io.connect();
-
-   socketio.on("bar", (data) => {
-      alert(JSON.stringify(data)); 
-   });
-
-   $(() => {
-      socketio.emit("startup", {});
-      socketio.emit('login_attempt', {
-         username: 'sam'
-      });
-      socketio.on("login_result", (data) => {
-         alert(JSON.stringify(data));
-      });
-   });
-
-   </script>
+   <link rel='stylesheet' type='text/css' href='client.css' />
+   <script src='/socket.io/socket.io.js'></script>
+   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+   <script src='client.js'></script>
 </head>
 
 <body>
-   <form id=login_box>
-      username:
-      <input type="text" id="username"/>
-      <button type=submit id=login_button>login</button>
+   <form id=login_popup>
+      <div class=error_box id=login_popup-error_box>Error: foo</div>
+      <input type=username id=login_popup-username placeholder='Username' /><br>
+      <input type=password id=login_popup-password placeholder='Password' /><br>
+      <button type=submit id=login_popup-submit>login</button>
    </form>
+   <div id=global_chat class=chat-window>
+      <div id=global_chat-header>
+         Hello, <strong><span id=global_chat-header-username></span></strong>.<br>
+         <input type=text id=global_chat-message_input class=chat-input size=120></strong>
+         <button id=global_chat-send_message class=chat-sendmsg>send</button>
+      </div>
+      <br><br><br><br>
+      <ul id=global_chat-chatlog class=chat-log></ul>
+   </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-

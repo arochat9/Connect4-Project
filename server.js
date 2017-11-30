@@ -1,22 +1,11 @@
 const app = require('./app.js');
-const games = require('./games.js');
-const users = require('./users.js'); 
+const requests = require('./requests_handler.js');
 const socketio = require('socket.io');
 const io = socketio.listen(app);
 
 io.sockets.on('connection', function(socket){
-   socket.on('startup', () => { /* nothing for now */ });
-   socket.on('login_attempt', (data) => {
-      var user = new users.User(data['username'], socket);
-      var result = users.add_user(user);
-      if( result === true ){
-         socket.emit('login_result', { result: 'success', username: username });
-         games.send_types(user);
-         games.send_active(user);
-      } else {
-         socket.emit('login_result', { result: 'failure', jreason: result });
-      }
-   })
+   socket.on( 'startup', (_) => { /* nothing for now */ } );
+   socket.on( 'login_attempt', (data) => requests.login_attempt(data, socket) );
 });
 
 console.log('Started up.');
