@@ -41,7 +41,8 @@ $(() => {
 
    $('#login_popup').show();
    $('#global_chat').hide();
-
+   $('#connect4_game').hide();
+   
    console.info('Webpage Loaded');
 });
 
