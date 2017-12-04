@@ -7,10 +7,6 @@ const app = http.createServer(function(req, resp){
    if(req.url == '/')
       req.url = '/client.html';
    file_to_serve = 'client' + req.url;
-   // if( req.url.substring(0, 7) === '/client' )
-   //    file_to_serve = req.url;
-   // else
-   //    file_to_serve = 'client/client.html';
 
    fs.readFile(file_to_serve, function(err, data){
       if(err){
