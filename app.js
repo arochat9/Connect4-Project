@@ -3,10 +3,12 @@ const http = require('http');
 const fs = require('fs');
 
 const app = http.createServer(function(req, resp){
-   var file_to_serve;
-   if(req.url == '/')
-      req.url = '/client.html';
-   file_to_serve = 'client' + req.url;
+   var file_to_serve = 'client';
+   if( req.url[0] === '/' && (req.url.endsWith(".js") || req.url === "/client.css" ))
+      file_to_serve += req.url;
+   else
+      file_to_serve += '/client.html';
+
 
    fs.readFile(file_to_serve, function(err, data){
       if(err){
