@@ -4,10 +4,10 @@ const fs = require('fs');
 
 const app = http.createServer(function(req, resp){
    var file_to_serve;
-   if(req.url === '/client.css' || req.url === '/client.js')
-      file_to_serve = req.url.substring(1);
+   if( req.url.substring(0, 7) === '/client' )
+      file_to_serve = req.url;
    else
-      file_to_serve = 'client.html';
+      file_to_serve = 'client/client.html';
 
    fs.readFile(file_to_serve, function(err, data){
       if(err){
