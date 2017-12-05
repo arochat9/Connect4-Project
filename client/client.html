@@ -6,6 +6,10 @@
    <link rel='stylesheet' type='text/css' href='client.css' />
    <script src='/socket.io/socket.io.js'></script>
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.22.1/babel.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+   <script src='lobby.js' type='text/babel'></script>
    <script src='client.js'></script>
 </head>
 
@@ -16,16 +20,7 @@
       <input type=password id=login_popup-password placeholder='Password' /><br>
       <button type=submit id=login_popup-submit>login</button>
    </form>
-   <div id=global_chat class=chat-window>
-      <div id=global_chat-header>
-         Hello, <strong><span id=global_chat-header-username></span></strong>.<br>
-         <input type=text id=global_chat-message_input class=chat-input size=120></strong>
-         <button id=global_chat-send_message class=chat-sendmsg>send</button>
-      </div>
-      <br><br><br><br>
-      <ul id=global_chat-chatlog class=chat-log></ul>
-   </div>
-   <div id=connect4>
-   </div>
+   <div id=lobby />
+   <div id=connect4 />
 </body>
 </html>

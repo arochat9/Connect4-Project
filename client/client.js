@@ -1,36 +1,38 @@
 var socketio = io.connect();
-var username = undefined;
+// socketio.on('chat-message')
 
-socketio.on('bar', (data) => {
-   alert(JSON.stringify(data));
-});
+function login_success(username){
+   $('#login_popup').hide();
+   startup_global_chat(username);
+}
+
+function login_failure(reason){
+   var error = `Login failure: ${reason}`;
+   console.error(error);
+   $('#login_popup-error_box').text(error);
+   $('#login_popup-error_box').show();
+}
 
 function login_attempt(username, password){
    console.log(`Attempted to login with username '${username}' and passowrd '${password}'.`);
-   socketio.emit('login_attempt', { username, password });
-   socketio.on('login_result', (data) => {
+   socketio.emit('login:attempt', { username, password });
+   socketio.on('login:result', (data) => {
       switch( data.result ){
          case 'success':
-            username = data.username;
-            $('#login_popup').hide();
-            $('#global_chat').show();
-            $('#global_chat-header-username').text(username);
+            login_success( data.username );
             break
          case 'failure':
-            var reason = data.reason;
+            login_failure( data.reason );
+            break;
          default:
-            if( typeof reason === undefined )
-               var reason = `Unrecognized login result '${data.result}'`;
-            var error = `Login failure: ${reason}`;
-            console.error(error);
-            $('#login_popup-error_box').text(error);
-            $('#login_popup-error_box').show();
+            login_failure(`Unrecognized login result '${data.result}'`);
       }
+      socketio.off('login:result');
    });
 }
 
 $(() => {
-   socketio.emit('startup', {});
+   socketio.emit('startup');
 
    $('#login_popup-submit').click( (event) => {
       event.preventDefault();
@@ -40,7 +42,6 @@ $(() => {
    });
 
    $('#login_popup').show();
-   $('#global_chat').hide();
    
    console.info('Webpage Loaded');
 });

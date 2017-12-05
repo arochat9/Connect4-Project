@@ -34,6 +34,25 @@
    content:"...";
 }
 
+.chatlog-msg {
+   border: 0.1em solid black;
+   width: 75%;
+}
 
+.chatlog-msg-username {
+   font-weight: bold;
+}
 
+.chatlog-msg-body {
+   /* nothing yet */
+}
 
+.username {
+   font-weight: bold;
+   font-style: underline;
+   color: #777;
+   font-size: 1.25em;
+}
+.chatlog-message-text {
+
+}

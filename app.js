@@ -1,6 +1,7 @@
 const PORT = 3456;
 const http = require('http');
 const fs = require('fs');
+const socketio = require('socket.io');
 
 const app = http.createServer(function(req, resp){
    var file_to_serve = 'client';
@@ -23,4 +24,5 @@ const app = http.createServer(function(req, resp){
 
 app.listen(PORT);
 
-module.exports = app;
+const io = socketio.listen(app);
+module.exports = { app, io, socketio };
