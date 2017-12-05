@@ -41,6 +41,12 @@ exports.user_left = function(socket){
 exports.user_joined = function(socket){
    var user = users.from_socket(socket);
    io.in(user.room).emit('userlist:user_joined', { username: user.username });
+   var clients = io.sockets.adapter.rooms[user.room].sockets;
+   for(var socket_id in clients){
+      var ouser = users.from_socket(io.sockets.connected[socket_id]).username;
+      if( ouser !== user.username )
+         socket.emit('userlist:user_joined', { username: ouser });
+   }
 }
 
 
