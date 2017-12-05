@@ -30,10 +30,6 @@
    padding: .1em 1ex;
 }
 
-.chat_box::-webkit-input-placeholder::before {
-   content:"...";
-}
-
 .chatlog-msg {
    border: 0.1em solid black;
    width: 75%;

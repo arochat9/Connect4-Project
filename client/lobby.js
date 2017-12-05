@@ -23,6 +23,7 @@ const UserList = React.createClass({
       users.push(user);
       this.setState({ users });
    },
+
    user_left(user){
       var users = this.state.users;
       console.log("User left: " + JSON.stringify(user));
@@ -116,6 +117,7 @@ const MessageBox = React.createClass({
                   onChange={this.update_text}
                   value={this.state.text}
                   size='120'
+                  placeholder='...'
                />
             </form>
          </div>

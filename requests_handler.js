@@ -25,7 +25,7 @@ exports.chat_message = function(data, socket){
            text = data.text;
    if( !text )
       return;
-   console.log(`User \`${username}\` (in \`${room}\`) sent: ${text}`)
+   console.log(`User '${username}' (in '${room}') sent: ${text}`)
    io.in(room).emit('chat:message', { username, text });
 }
 
