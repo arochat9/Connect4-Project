@@ -6,24 +6,19 @@
    <link rel='stylesheet' type='text/css' href='client.css' />
    <link rel='stylesheet' type='text/css' href='game.css' />
    <script src='/socket.io/socket.io.js'></script>
-   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+   <!-- <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script> -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.22.1/babel.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
-   <script src='lobby.js' type='text/babel'></script>
+   <script src='chatbox.js' type='text/babel'></script>
+   <script src='userlist.js' type='text/babel'></script>
    <script src='game.js' type='text/babel'></script>
-   <script src='client.js' type='text/babel'></script>
-   <script src='clientOLD.js'></script>
+   <script src='loginwindow.js' type='text/babel'></script>
+   <script src='app.js' type='text/babel'></script>
+   <!-- <script src='clientOLD.js'></script> -->
 </head>
 
 <body>
-   <form id=login_popup>
-      <div class=error_box id=login_popup-error_box>Error: foo</div>
-      <input type=username id=login_popup-username placeholder='Username' /><br>
-      <input type=password id=login_popup-password placeholder='Password (not working)' /><br>
-      <button type=submit id=login_popup-submit>login</button>
-   </form>
-   <div id=connect4 />
-   <div id=lobby />
+   <div id=root>
 </body>
 </html>

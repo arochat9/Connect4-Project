@@ -12,13 +12,13 @@ const Board = React.createClass({
    },
 
    componentDidMount() {
-      socketio.emit('userlist:startup');
-      socketio.on('game:take_move', this.move_taken);
+      socketio.emit('game:startup');
+      socketio.on('game:move', this.move_taken);
    },
 
    move_taken(data){
-      var x = data.x, y = data.y, player = data.player;
-      console.log("Player '" + player + "' took a move at (" + x + ',' + y + ')');
+      var x = data.x, y = data.y, color = data.color;
+      console.log("Player '" + color + "' took a move at (" + x + ',' + y + ')');
    },
 
   clicker(i) {
@@ -31,7 +31,7 @@ const Board = React.createClass({
     });
   },
   button_clicked(pos, event){
-      socketio.emit('game:take_move', { pos });
+      socketio.emit('game:move', { pos });
       this.clicker(pos);
   },
   renderCol(i) {
@@ -108,6 +108,10 @@ const Game = React.createClass({
 // ========================================
 
 
-function startup_game_window(username){
-   ReactDOM.render(<Game />, document.getElementById('connect4') );
+function startup_game_window(){
+   socketio.emit('game:startup');
+   socketio.on('game:startup', data => {
+      console.log("data: " + JSON.stringify(data));
+      ReactDOM.render(<Game />, document.getElementById('connect4') );
+   });
 }
