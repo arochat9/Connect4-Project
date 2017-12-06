@@ -2,6 +2,19 @@ const users = require('./users.js');
 const {io} = require('./app.js');
 const game = require('./game.js');
 
+
+exports.register_attempt = function(data, socket) {
+   var {username, password} = data;
+   var result = users.register_user(username, password);
+   if( typeof result === 'string' ){
+      socket.emit('register:result', { result: 'failure', reason: result });
+      console.log(`Couldn't register user '${username}': ${result}`);
+   } else {
+      socket.emit('register:result', { result: 'success', username });
+      console.log(`User '${username}' registered.`);
+   }
+}
+
 exports.login_attempt = function(data, socket) {
    var {username, password} = data;
    var result = users.add_user(username, password, socket);
@@ -34,6 +47,42 @@ private_message = function(data, socket){
 
 }
 
+exports.add_friend = function(data, socket){
+   var user = users.from_socket(socket);
+   var {username} = data;
+   console.log(`Trying to add friend '${username}' to ${user}`);
+   if( !user || !username )
+      return;
+   var result = user.add_friend(username);
+   if( result === true ){
+      console.log(`Adding friend ${username} to ${user.username}`);
+      socket.emit('friends:add', { result: 'success', username });
+   } else {
+      console.log(`Failed to add friend ${username} to ${user.username}`);
+      socket.emit('friends:add', { result: 'failure', reason: result });
+   }
+}
+
+exports.del_friend = function(data, socket){
+   var user = users.from_socket(socket);
+   var {username} = data;
+   if( !user || !username )
+      return;
+   var result = user.del_friend(username);
+   if( result === true )
+      socket.emit('friends:del', { result: 'success', username });
+   else
+      socket.emit('friends:del', { result: 'failure', reason: result });
+}
+exports.list_friends = function(socket){
+   var user = users.from_socket(socket);
+   if( !user )
+      return;
+   for( var ind in user.friends )
+      socket.emit('friends:list', { username: user.friends[ind] });
+}
+
+
 chat_message = function(data, socket){
    var user = users.from_socket(socket);
    if( !user )
@@ -51,6 +100,7 @@ exports.user_left = function(socket){
       return;
    console.log(`User '${user.username}' left. `)
    io.in(user.room).emit('userlist:user_left', { username: user.username });
+   user.servermsg_room(`User '${user.username}' has logged off.`);
    if( user.game )
       user.game.game.quit_game();
    users.delete_socket(socket);
@@ -63,6 +113,7 @@ exports.user_joined = function(socket){
    io.in(user.room).emit('userlist:user_joined', { username: user.username });
    var clients = io.sockets.adapter.rooms[user.room].sockets;
 
+   user.servermsg_room(`User '${user.username}' has logged on.`);
    for(var socket_id in clients){
       var their_socket = io.sockets.connected[socket_id];
       if( !their_socket ){

@@ -1,8 +1,13 @@
 const Lobby = React.createClass({
+   logout(_){
+      window.location.reload(false); 
+   },
    render(){
       return (
          <div>
-            <button onClick={ this.props.__rand_game }>random game</button>
+            <button onClick={ this.logout }>logout</button>
+            <button onClick={ this.props.rand_game }>random game</button>
+            <FriendsList /> 
             <UserList chatroom={this.props.chatroom} username={this.props.username} />
             <ChatBox chatroom={this.props.chatroom} username={this.props.username} />
          </div>
@@ -27,7 +32,7 @@ const App = React.createClass({
       console.info('Webpage loaded');
    },
 
-   __rand_game(event){
+   rand_game(event){
       event.preventDefault();
       socketio.emit('game:random');
       socketio.on('game:begin', data => {
@@ -46,6 +51,27 @@ const App = React.createClass({
       })
    },
 
+
+   register_attempt(username, password, on_err, on_success){
+      console.log("Attempting to register as " + username + "");
+      socketio.emit('register:attempt', { username, password });
+      socketio.on('register:result', data => {
+         
+         switch( data.result ){
+            case 'success':
+               on_success(`Succesfully registered as '${data.username}'.`);
+               break
+            case 'failure':
+               console.log("Couldn't register:" + data.reason);
+               on_err(data.reason);
+               break;
+            default:
+               console.error('Unrecognized register result: ' + data.result);
+         }
+         socketio.off('register:result');
+      });
+   },
+
    login_attempt(username, password, on_err){
       console.log("Attempting to log in as " + username + "");
       socketio.emit('login:attempt', { username, password });
@@ -62,7 +88,7 @@ const App = React.createClass({
                break
             case 'failure':
                console.log("Couldn't log in:" + data.reason);
-               (on_err)(data.reason);
+               on_err(data.reason);
                break;
             default:
                console.error('Unrecognized login result: ' + data.result);
@@ -79,12 +105,13 @@ const App = React.createClass({
             { this.state.login ?
                <LoginWindow
                   login_attempt={this.login_attempt}
+                  register_attempt={this.register_attempt}
                /> : null }
             { this.state.lobby ?
                <Lobby
                   username={this.state.username}
                   chatroom={this.state.chatroom}
-                  __rand_game={this.__rand_game}
+                  rand_game={this.rand_game}
                /> : null }
          </div>
       );

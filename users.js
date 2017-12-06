@@ -4,20 +4,34 @@ const {io} = require('./app.js');
 
 const fs = require("fs");
 
-const saved_users = {}
+var saved_users = {}
 
 function get_users(datafile){
-   var users = {};
+   saved_users = {};
    fs.readFileSync(datafile).toString().split('\n').forEach( line => {
       var match = line.match(/^(\w+):(\w+):(\w+(?:,\w+)*|)$/);
+      if( !line.trim() )
+         return;
       if( !match ){
          console.error(`Invalid line! ${line}`);
          return;
       }
       var [_, username, password, friends] = match;
-      users[username] = { password, friends };
+      var friends = friends.split(',').filter(f => f);
+      saved_users[username] = { password, friends };
    });
-   return users;
+   return saved_users;
+}
+
+function save_users(datafile){
+   var content = '';
+   for( var user in saved_users )
+      content += `${user}:${saved_users[user].password}:${saved_users[user].friends.join(',')}\n`;
+   fs.writeFileSync(datafile, content, 'utf8');
+}
+
+function append_user(datafile, username, password){
+   fs.appendFileSync(datafile, `${username}:${password}:\n`);
 }
 
 const DEFAULT_CHATROOM = 'global';
@@ -28,8 +42,10 @@ class User {
       this.username = username;
       this.socket = socket;
       this.room = room;
+      this.friends = get_users(DEFAULT_USERS_FILE)[username].friends;
    }
    set room(room){
+      this.socket.leave(this.room);
       this._room = room;
       this.socket.emit('chat:room:change', { room });
       this.socket.join(room);
@@ -67,24 +83,60 @@ class User {
       this.socket.emit('game:stop', { chatroom: this.room });
       delete this.game;
    }
+   add_friend(friend){
+      if( friend == false || !friend.match(/^\w+$/) ) // ie empty string, undefined, whatever
+         return 'Invalid username';
+      else if( !friend.match(/^\w{5,}$/))
+         return 'Too short of a username!';
+
+      if( this.friends.indexOf(friend) === -1)
+         this.friends.push( friend );
+      else
+         return 'friend already exists';
+      save_users(DEFAULT_USERS_FILE);
+      return true;
+   }
+   del_friend(friend){
+      if( this.friends.indexOf(friend) === -1)
+         return 'friend doesnt exist';
+      else {
+         this.friends.splice( this.friends.indexOf(friend), 1);
+         save_users(DEFAULT_USERS_FILE);
+         return true;
+      }
+   }
 }
 
 const logged_in_users = {};
 
 
+
+exports.register_user = function(username, password){
+   if( username == false || !username.match(/^\w+$/) ) // ie empty string, undefined, whatever
+      return 'Invalid username';
+   else if( !username.match(/^\w{5,}$/))
+      return 'Too short of a username!';
+   else if( get_users(DEFAULT_USERS_FILE)[username] )
+      return 'Username already exists!';
+   else {
+      append_user(DEFAULT_USERS_FILE, username, password);
+      return true;
+   }
+}
+
 exports.add_user = function(username, password, socket){
    var all_users = get_users(DEFAULT_USERS_FILE);
-   // if( username == false || !username.match(/^\w+$/) ) // ie empty string, undefined, whatever
-   //    return 'Invalid username';
-   // else if( !username.match(/^\w{5,}$/))
-   //    return 'Too short of a username!';
-   // else if( logged_in_users[socket.id] || exports.from_username(username) )
-   //    return `User '${username}' already is logged in.`;
-   // else if( !all_users[username] )
-   //    return `User '${username}' doesnt exist.`;
-   // else if( all_users[username].password !== password )
-   //    return `Invalid password.`;
-   // else
+   if( username == false || !username.match(/^\w+$/) ) // ie empty string, undefined, whatever
+      return 'Invalid username';
+   else if( !all_users[username] )
+      return `User '${username}' doesnt exist.`;
+   else if( !username.match(/^\w{5,}$/))
+      return 'Too short of a username!';
+   else if( logged_in_users[socket.id] || exports.from_username(username) )
+      return `User '${username}' already is logged in.`;
+   else if( all_users[username].password !== password )
+      return `Invalid password.`;
+   else
       return logged_in_users[socket.id] = new User(username, socket);
 }
 

@@ -27,6 +27,19 @@
    margin: .5em .5ex;
    padding: .1em 1ex;
 }
+.success_box {
+   background-color: #dfd;
+   color: #00cc60;
+
+   font-size: 1.25em;
+   text-align: center;
+
+   border: 0.1em solid #8f8;
+   border-radius: .5em;
+   margin: .5em .5ex;
+   padding: .1em 1ex;
+}
+
 
 .chatlog-msg {
    border: 0.1em solid black;
