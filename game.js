@@ -2,7 +2,7 @@ const users = require('./users.js');
 const {io} = require('./app.js');
 
 class Game {
-   static next_game_id(){
+   static next_game_id(){ // get next id for match
       var ret = Game.__next_game_id;
       Game.__next_game_id += 1; // not atomic, whatever.
       return ret;
@@ -114,6 +114,7 @@ class Game {
       }
    }
 
+   // have a player take their move
    take_move(pl, data){
       if( pl !== this.current )
          return;
@@ -136,6 +137,7 @@ class Game {
       }
    }
 
+   // check if a column is full for an invalid move
    column_full(col){
       var sum = 0;
       for(var row in this.board)
@@ -145,6 +147,7 @@ class Game {
       return sum >= 6;
    }
 
+   // when the game is quit
    quit_game(){
       this.p1.quit_game();
       this.p2.quit_game();

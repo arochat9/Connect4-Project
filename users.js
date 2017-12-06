@@ -6,6 +6,7 @@ const fs = require("fs");
 
 var saved_users = {}
 
+// get the list of users from the data file
 function get_users(datafile){
    saved_users = {};
    fs.readFileSync(datafile).toString().split('\n').forEach( line => {
@@ -23,6 +24,7 @@ function get_users(datafile){
    return saved_users;
 }
 
+// save the users to the datafile
 function save_users(datafile){
    var content = '';
    for( var user in saved_users )
@@ -30,6 +32,7 @@ function save_users(datafile){
    fs.writeFileSync(datafile, content, 'utf8');
 }
 
+// add a new user
 function append_user(datafile, username, password){
    fs.appendFileSync(datafile, `${username}:${password}:\n`);
 }
@@ -37,22 +40,27 @@ function append_user(datafile, username, password){
 const DEFAULT_CHATROOM = 'global';
 const DEFAULT_USERS_FILE = './data/users.data';
 
+// user class
 class User {
+   // create a user
    constructor(username, socket, room=DEFAULT_CHATROOM){
       this.username = username;
       this.socket = socket;
       this.room = room;
       this.friends = get_users(DEFAULT_USERS_FILE)[username].friends;
    }
+   // set the user's room
    set room(room){
-      this.socket.leave(this.room);
+      // this.socket.leave(this.room);
       this._room = room;
       this.socket.emit('chat:room:change', { room });
       this.socket.join(room);
    }
+   // get the room
    get room(){
       return this._room;
    }
+   // starta game for this player
    new_game(game, opponent, color, starts){
       this.room = game.room;
       this.game = { game, opponent, color, starts };
@@ -68,21 +76,23 @@ class User {
       this.socket.on('game:move', data => this.game.game.take_move(this, data) );
       this.socket.on('game:quit', this.game.game.quit_game );
    }
+   // message everyone as the server in this user's room
    servermsg_room(text){
       console.log(`Room msg for ${this.username}: ${text}`);
       io.in(this.room).emit('chat:message', {username: '<system>', text});
    }
-
+   // message this user as the server
    servermsg_private(text){
       console.log(`User msg for ${this.username}: ${text}`);
       this.socket.emit('chat:message', {username: '<system private>', text});
    }
-
+   // have this user quit the game
    quit_game(){
       this.room = DEFAULT_CHATROOM;
       this.socket.emit('game:stop', { chatroom: this.room });
       delete this.game;
    }
+   // add a friend to this user
    add_friend(friend){
       if( friend == false || !friend.match(/^\w+$/) ) // ie empty string, undefined, whatever
          return 'Invalid username';
@@ -96,6 +106,7 @@ class User {
       save_users(DEFAULT_USERS_FILE);
       return true;
    }
+   // deleete a friend from this user
    del_friend(friend){
       if( this.friends.indexOf(friend) === -1)
          return 'friend doesnt exist';

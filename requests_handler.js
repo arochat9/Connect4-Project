@@ -3,6 +3,7 @@ const {io} = require('./app.js');
 const game = require('./game.js');
 
 
+// when someone attempts to register
 exports.register_attempt = function(data, socket) {
    var {username, password} = data;
    var result = users.register_user(username, password);
@@ -15,6 +16,7 @@ exports.register_attempt = function(data, socket) {
    }
 }
 
+// when someone attempts to login
 exports.login_attempt = function(data, socket) {
    var {username, password} = data;
    var result = users.add_user(username, password, socket);
@@ -32,6 +34,7 @@ exports.login_attempt = function(data, socket) {
    }
 }
 
+// when someone pms
 private_message = function(data, socket){
    var user = users.from_socket(socket);
    if( !user )
@@ -48,6 +51,7 @@ private_message = function(data, socket){
 
 }
 
+// to add a friend
 exports.add_friend = function(data, socket){
    var user = users.from_socket(socket);
    var {username} = data;
@@ -64,6 +68,7 @@ exports.add_friend = function(data, socket){
    }
 }
 
+// to delete a friend
 exports.del_friend = function(data, socket){
    var user = users.from_socket(socket);
    var {username} = data;
@@ -75,6 +80,8 @@ exports.del_friend = function(data, socket){
    else
       socket.emit('friends:del', { result: 'failure', reason: result });
 }
+
+// to list friends
 exports.list_friends = function(socket){
    var user = users.from_socket(socket);
    if( !user )
@@ -83,7 +90,7 @@ exports.list_friends = function(socket){
       socket.emit('friends:list', { username: user.friends[ind] });
 }
 
-
+// to send a message to chat
 chat_message = function(data, socket){
    var user = users.from_socket(socket);
    if( !user )
@@ -95,6 +102,7 @@ chat_message = function(data, socket){
    io.in(room).emit('chat:message', { username, text });
 }
 
+// when a user left the channel
 exports.user_left = function(socket){
    var user = users.from_socket(socket);
    if( !user )
@@ -107,6 +115,7 @@ exports.user_left = function(socket){
    users.delete_socket(socket);
 }
 
+// when a user joins the channel
 exports.user_joined = function(socket){
    var user = users.from_socket(socket);
    if( !user )
@@ -131,6 +140,7 @@ exports.user_joined = function(socket){
    }
 }
 
+// when someone wins
 exports.game_win = function(data, socket){
   var user = users.from_socket(socket);
   if( !user )
@@ -138,11 +148,7 @@ exports.game_win = function(data, socket){
   io.in(user.room).emit('game:winner', data);
 }
 
-exports.start_game = function(data, socket){
-   socket.emit('game:start', { color: 'yellow' });
-   socket.to(room).emit('game:start', { color: 'red' });
-}
-
+// when a user takes a move
 exports.take_move = function(data, socket){
    var user = users.from_socket(socket);
    if( !user )
