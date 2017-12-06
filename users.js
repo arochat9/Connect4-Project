@@ -40,12 +40,15 @@ class User {
    new_game(game, opponent, color, starts){
       this.room = game.room;
       this.game = { game, opponent, color, starts };
+      console.log(`Sending newgame to ${this.username} (opponent=${opponent})`);
       this.socket.emit('game:begin', {
          opponent,
          color,
          starts: 'yellow',
          chatroom: this.room
       });
+      var d = new Date();
+      console.log(`disp (kinda) at ${d.getSeconds()}:${d.getMilliseconds()}`);
       this.socket.on('game:move', data => this.game.game.take_move(this, data) );
       this.socket.on('game:quit', this.game.game.quit_game );
    }
@@ -71,17 +74,17 @@ const logged_in_users = {};
 
 exports.add_user = function(username, password, socket){
    var all_users = get_users(DEFAULT_USERS_FILE);
-   if( username == false || !username.match(/^\w+$/) ) // ie empty string, undefined, whatever
-      return 'Invalid username';
-   else if( !username.match(/^\w{5,}$/))
-      return 'Too short of a username!';
-   else if( logged_in_users[socket.id] || exports.from_username(username) )
-      return `User '${username}' already is logged in.`;
-   else if( !all_users[username] )
-      return `User '${username}' doesnt exist.`;
-   else if( all_users[username].password !== password )
-      return `Invalid password.`;
-   else
+   // if( username == false || !username.match(/^\w+$/) ) // ie empty string, undefined, whatever
+   //    return 'Invalid username';
+   // else if( !username.match(/^\w{5,}$/))
+   //    return 'Too short of a username!';
+   // else if( logged_in_users[socket.id] || exports.from_username(username) )
+   //    return `User '${username}' already is logged in.`;
+   // else if( !all_users[username] )
+   //    return `User '${username}' doesnt exist.`;
+   // else if( all_users[username].password !== password )
+   //    return `Invalid password.`;
+   // else
       return logged_in_users[socket.id] = new User(username, socket);
 }
 

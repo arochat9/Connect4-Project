@@ -74,7 +74,8 @@ const App = React.createClass({
    render() {
       return (
          <div className='app'>
-            { this.state.game  ? <Game /> : null }
+            { this.state.game  ?
+               <Game game_info={ this.state.game_info } /> : null }
             { this.state.login ?
                <LoginWindow
                   login_attempt={this.login_attempt}

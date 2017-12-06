@@ -19,8 +19,8 @@ class Game {
       this.p1 = p1;
       this.p2 = p2;
       this.board = [[], [], [], [], [], [], []];
-      p1.new_game(this, p2.username, 'red', true);
-      p2.new_game(this, p1.username, 'yellow', false);
+      p1.new_game(this, p2.username, 'yellow', true);
+      p2.new_game(this, p1.username, 'red', false);
       this.current = p1;
    }
    check_for_win(){

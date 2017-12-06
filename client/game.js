@@ -12,7 +12,8 @@ const Board = React.createClass({
         gameBoardArray[i]=[];
       }
       return {
-        status: "",
+        status: "Playing against " + this.props.game_info.opponent + ". You are " +
+               this.props.game_info.color + ". " + this.props.game_info.starts + " starts",
         squares: Array(42).fill(null),
         xIsNext: true
       };
@@ -40,14 +41,6 @@ const Board = React.createClass({
 
   // = 'Next player: ' + (this.state.xIsNext ? 'Yellow' : 'Red');
   componentDidMount() {
-    console.log("BOARD COMPONENT MOUNTED");
-    socketio.emit('game:startup');
-    // socketio.on('game:begin', this.function(data) {
-    socketio.on('game:begin', 2345);
-    //   console.log("Recieved initial data");
-    //   //this.state.status = "Playing against "+data.opponent+".  You are "+data.color+".  "+data.starts+" starts.";
-    //   this.setState({status: "Playing against "+data.opponent+".  You are "+data.color+".  "+data.starts+" starts."});
-    //   socketio.off('game:begin');
     // });
   },
   componentWillUnmount() {
@@ -132,7 +125,7 @@ const Game = React.createClass({
   render() {
     return (
       <div className="game-board">
-        <Board />
+        <Board game_info={ this.props.game_info } />
         <Circles />
       </div>
     );
