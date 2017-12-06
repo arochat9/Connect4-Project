@@ -1,7 +1,26 @@
 const requests = require('./requests_handler');
 const {io} = require('./app.js');
 
+
+const fs = require("fs");
+
+const user_data = {}
+
+exports.read_users = function(datafile){
+   fs.readFileSync(datafile).toString().split('\n').forEach( line => {
+      var match = line.match(/^(\w+):(\w+):(\w+(?:,\w+)*|)$/);
+      if( !match ){
+         console.error(`Invalid line! ${line}`);
+         return;
+      }
+      let [_, username, password, friends] = match;
+      user_data[username] = { password, friends };
+   });
+}
+
+
 const DEFAULT_CHATROOM = 'global';
+
 class User {
    constructor(username, socket, room=DEFAULT_CHATROOM){
       this.username = username;
@@ -18,7 +37,12 @@ class User {
    new_game(game, opponent, color, starts){
       this.room = game.room;
       this.game = { game, opponent, color, starts };
-      this.socket.emit('game:begin', { opponent, color, starts, chatroom: this.room });
+      this.socket.emit('game:begin', {
+         opponent,
+         color,
+         starts: 'yellow',
+         chatroom: this.room
+      });
       this.socket.on('game:move', data => this.game.game.take_move(this, data) );
       this.socket.on('game:quit', this.game.game.quit_game );
    }
@@ -72,20 +96,3 @@ exports.from_username = function(username){
 
 
 
-
-///
-const fs = require("fs");
-
-const user_data = {}
-
-exports.read_users = function(datafile){
-   fs.readFileSync(datafile).toString().split('\n').forEach( line => {
-      var match = line.match(/^(\w+):(\w+):(\w+(?:,\w+)*|)$/);
-      if( !match ){
-         console.error(`Invalid line! ${line}`);
-         return;
-      }
-      let [_, username, password, friends] = match;
-      user_data[username] = { password, friends };
-   });
-}

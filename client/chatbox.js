@@ -99,6 +99,7 @@ const MessageBox = React.createClass({
                   ? '' 
                   : <span>You are talking in <strong>{this.props.chatroom}</strong></span>
                }</h2>
+               <p>Hint: to message someone, type <code>/w username message</code></p>
             <form onSubmit={this.submit}>
                <input
                   onChange={this.update_text}
