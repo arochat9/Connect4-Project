@@ -58,7 +58,8 @@ exports.delete_socket = function(socket){
 }
 
 exports.from_socket = function(socket){
-   return users[socket.id];
+   if( socket.id )
+      return users[socket.id];
 }
 
 exports.from_username = function(username){

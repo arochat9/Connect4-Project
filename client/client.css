@@ -50,3 +50,8 @@
 .chatlog-message-text {
 
 }
+
+#chatlog-container {
+   max-height: 500px;
+   s
+}
