@@ -6,6 +6,7 @@ const XDIMENSION = 7;
 const YDIMENSION = 6;
 var playerColor;
 var opponentColor;
+var turnCounter = 0;
 var gameBoardArray = [[],[]];
 
 const Board = React.createClass({
@@ -17,34 +18,49 @@ const Board = React.createClass({
       if(playerColor === "red") opponentColor = "yellow";
       else opponentColor = "red";
       return {
-        status: "Playing against " + this.props.game_info.opponent + ". You are " +
+        status: turnCounter+" turn(s) so far. Playing against " + this.props.game_info.opponent + ". You are " +
                this.props.game_info.color + ". " + this.props.game_info.starts + " is up.",
-        squares: Array(42).fill(null),
-        xIsNext: true,
-        turn: this.props.game_info.color === this.props.game_info.starts
+        turn: this.props.game_info.color === this.props.game_info.starts,
+        secondsLeft: 0
       };
    },
+   tick: function() {
+     this.setState({secondsLeft: this.state.secondsLeft - 1});
+     if (this.state.secondsLeft <= 0) {
+       clearInterval(this.interval);
+     }
+   },
    componentDidMount(){
+     this.setState({ secondsLeft: this.props.secondsLeft });
+     this.interval = setInterval(this.tick, 1000);
+
      this.props.setturn_callback( turn => {
+       turnCounter++;
        if(turn) {
          this.setState({
+           secondsLeft: 20,
            turn,
-           status: "Playing against " + this.props.game_info.opponent + ". You are " +
+           status: turnCounter+" turn(s) so far. Playing against " + this.props.game_info.opponent + ". You are " +
                   this.props.game_info.color + ". " + playerColor + " is up.",
          });
        }
        else {
          this.setState({
+           secondsLeft: 20,
            turn,
-           status: "Playing against " + this.props.game_info.opponent + ". You are " +
+           status: turnCounter+" turn(s) so far. Playing against " + this.props.game_info.opponent + ". You are " +
                   this.props.game_info.color + ". " + opponentColor + " is up.",
          });
        }
      });
-   },
+  },
+  componentWillUnmount: function(){
+     clearInterval(this.interval);
+  },
 
   button_clicked(pos, event){
     if(this.state.turn === true) {
+      this.state.secondsLeft = 20;
       socketio.emit('game:move', { pos });
       console.log("BUTTON PRESSED");
       //this.clicker(pos);
@@ -61,7 +77,7 @@ const Board = React.createClass({
   render() {
     return (
      <div>
-       <div className="status">{this.state.status}</div>
+       <div className="status">{this.state.status} {this.state.secondsLeft} seconds left.</div>
        <div className="board-row">
          {this.renderCol(0)}
          {this.renderCol(1)}
@@ -152,7 +168,11 @@ const Game = React.createClass({
   render() {
     return (
       <div className="game-board">
-        <Board game_info={ this.props.game_info } setturn_callback={this.setturn_callback}/>
+        <Board
+          game_info={ this.props.game_info }
+          setturn_callback={this.setturn_callback}
+          secondsLeft="20"
+        />
         <Circles set_turn={this.set_turn}/>
       </div>
     );
