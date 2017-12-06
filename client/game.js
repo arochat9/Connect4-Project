@@ -24,7 +24,7 @@ const Board = React.createClass({
    tick: function() {//when timer runs out player goes in a random spot
      this.setState({secondsLeft: this.state.secondsLeft - 1});
      if (this.state.secondsLeft <= 0) {
-       clearInterval(this.interval);
+       // clearInterval(this.interval);
        this.button_clicked(Math.floor(Math.random() * 7));
      }
    },
