@@ -130,6 +130,13 @@ exports.user_joined = function(socket){
    }
 }
 
+exports.game_win = function(data, socket){
+  var user = users.from_socket(socket);
+  if( !user )
+    return;
+  io.in(user.room).emit('game:winner', data);
+}
+
 exports.start_game = function(data, socket){
    socket.emit('game:start', { color: 'yellow' });
    socket.to(room).emit('game:start', { color: 'red' });

@@ -1,4 +1,4 @@
-const users = require('./users.js'); 
+const users = require('./users.js');
 const {io} = require('./app.js');
 
 class Game {
@@ -24,8 +24,97 @@ class Game {
       this.current = p1;
    }
    check_for_win(){
-      console.log("(TODO: Check for win)");
+     console.log("board[4][0]="+this.board[4][0]);
+      //vertical winnning --> board[][]
+      for(let horiz = 0; horiz < this.board.length; horiz++) {
+        for(let counter = 0; counter < 3; counter++) {
+          let temp = this.board[horiz][counter];
+          if(temp === this.board[horiz][counter+1] && temp === this.board[horiz][counter+2]
+             && temp === this.board[horiz][counter+3]) {
+              if(temp === "red") {
+                console.log("red winner for horizontal");
+                this.p1.socket.emit('game:winner', { winner: "red" });
+                this.p2.socket.emit('game:winner', { winner: "red" });
+                this.quit_game();
+                this.p1.servermsg_room(`${this.p2.username} beat ${this.p1.username} in connect-4!`);
+              }
+              else if(temp === "yellow") {
+                console.log("yellow winner for horizontal");
+                this.p1.socket.emit('game:winner', { winner: "yellow" });
+                this.p2.socket.emit('game:winner', { winner: "yellow" });
+                this.quit_game();
+                this.p1.servermsg_room(`${this.p1.username} beat ${this.p2.username} in connect-4!`);
+              }
+          }
+        }
+      }
+      //horizontal winning
+      for(let vert = 0; vert < 6; vert++) {
+        for(let counter = 0; counter < this.board.length-3; counter++) {
+          let temp = this.board[counter][vert];
+          if(temp === this.board[counter+1][vert] && temp === this.board[counter+2][vert]
+             && temp === this.board[counter+3][vert]) {
+               if(temp === "red") {
+                 console.log("red winner for vertical");
+                 this.p1.socket.emit('game:winner', { winner: "red" });
+                 this.p2.socket.emit('game:winner', { winner: "red" });
+                 this.quit_game();
+                 this.p1.servermsg_room(`${this.p2.username} beat ${this.p1.username} in connect-4!`);
+               }
+               else if(temp === "yellow") {
+                 console.log("yellow winner for vertical");
+                 this.p1.socket.emit('game:winner', { winner: "yellow" });
+                 this.p2.socket.emit('game:winner', { winner: "yellow" });
+                 this.quit_game();
+                 this.p1.servermsg_room(`${this.p1.username} beat ${this.p2.username} in connect-4!`);
+               }
+          }
+        }
+      }
+      //regular diagonal winnning
+      for(let vert = 0; vert < 3; vert++) {
+        for(let horiz = 0; horiz < this.board.length-3; horiz++) {
+          let temp = this.board[vert][horiz];
+          if(temp === this.board[vert+1][horiz+1] && temp === this.board[vert+2][horiz+2]
+             && this.board[vert+3][horiz+3]) {
+               if(temp === "red") {
+                 this.p1.socket.emit('game:winner', { winner: "red" });
+                 this.p2.socket.emit('game:winner', { winner: "red" });
+                 this.quit_game();
+                 this.p1.servermsg_room(`${this.p2.username} beat ${this.p1.username} in connect-4!`);
+               }
+               else if(temp === "yellow") {
+                 this.p1.socket.emit('game:winner', { winner: "yellow" });
+                 this.p2.socket.emit('game:winner', { winner: "yellow" });
+                 this.quit_game();
+                 this.p1.servermsg_room(`${this.p1.username} beat ${this.p2.username} in connect-4!`);
+               }
+          }
+        }
+      }
+      //backwards diagonal winning
+      for(let vert = 0; vert < 3; vert++) {
+        for(let horiz = 3; horiz < this.board.length; horiz++) {
+          let temp = this.board[vert][horiz];
+          if(temp === this.board[vert+1][horiz-1] && temp === this.board[vert+2][horiz-2]
+             && this.board[vert+3][horiz-3]) {
+               if(temp === "red") {
+                 this.p1.socket.emit('game:winner', { winner: "red" });
+                 this.p2.socket.emit('game:winner', { winner: "red" });
+                 this.quit_game();
+                 this.p1.servermsg_room(`${this.p2.username} beat ${this.p1.username} in connect-4!`);
+               }
+               else if(temp === "yellow") {
+                 this.p1.socket.emit('game:winner', { winner: "yellow" });
+                 this.p2.socket.emit('game:winner', { winner: "yellow" });
+                 this.quit_game();
+                 this.p1.servermsg_room(`${this.p1.username} beat ${this.p2.username} in connect-4!`);
+               }
+          }
+        }
+      }
    }
+
    take_move(pl, data){
       if( pl !== this.current )
          return;
@@ -89,30 +178,3 @@ exports.matchmake_random = function(user){
       random_users_queue.push( user );
    }
 }
-
-// function matchmake_specific(user, opponent){
-//    if( specific_users_queue )
-//    if( specific_users_queue[user.username] )
-// }
-
-// exports.matchmaking_friends = function(data, socket){
-//    var user = users.from_socket(socket);
-//    var valid_opponents = data.valid_opponents;
-//    if( !user || !valid_opponents )
-//       return;
-//    if( !(valid_opponents instanceof Array) ){
-//       console.error(`Got non-array '${JSON.stringify(valid_opponents)}' for valid_opponents`);
-//       return;
-//    }
-//    matchmake(user, valid_opponents);
-// }
-
-// exports.matchmaking_random = function(socket) {
-//    var user = users.from_socket(socket);
-//    if( !user )
-//       return;
-//    matchmake_random(user);
-// }
-
-
-

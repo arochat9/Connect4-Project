@@ -12,7 +12,7 @@ io.sockets.on('connection', function(socket){
    socket.on( 'friends:add', data => requests.add_friend(data, socket) );
    socket.on( 'friends:del', data => requests.del_friend(data, socket) );
    socket.on( 'friends:list', () => requests.list_friends(socket) );
-
+   socket.on( 'game:winner', data => requests.game_win(data, socket));
 });
 
 console.log('Started up.');

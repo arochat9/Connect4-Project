@@ -154,18 +154,23 @@ const Circles = React.createClass({
 });
 
 
-const Game = React.createClass({
+const Game = React.createClass({//parent class
   getInitialState() {
     return {turn_callback: undefined};
+  },
+  componentDidMount() {
+     socketio.on('game:winner', data => {
+       alert(data.winner+ " has won");
+     });
   },
   set_turn(turn){
     console.log("SET TURN METHOD WAS CALLED. turn set to: "+turn);
     this.state.turn_callback(turn);
   },
-  setturn_callback(turn_callback){
+  setturn_callback(turn_callback){//callback function
     this.setState({ turn_callback });
   },
-  render() {
+  render() {//parent rendering
     return (
       <div className="game-board">
         <Board
