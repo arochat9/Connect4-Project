@@ -31,6 +31,7 @@ class User {
       console.log(`User msg for ${this.username}: ${text}`);
       this.socket.emit('chat:message', {username: '<system private>', text});
    }
+
    quit_game(){
       this.room = DEFAULT_CHATROOM;
       this.socket.emit('game:stop', { chatroom: this.room });
@@ -48,7 +49,7 @@ exports.add_user = function(username, socket){
       return 'Too short of a username!';
    else if( users[socket.id] || exports.from_username(username) )
       return `User '${username}' already is logged in.`;
-   else 
+   else
       return users[socket.id] = new User(username, socket);
 }
 
@@ -65,13 +66,3 @@ exports.from_username = function(username){
       if(users[socketid].username === username)
          return users[socketid];
 }
-
-
-
-
-
-
-
-
-
-

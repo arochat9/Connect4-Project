@@ -12,12 +12,6 @@ ol, ul {
   display: table;
 }
 
-/*.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}*/
-
 .status {
   margin-bottom: 10px;
 }
@@ -44,21 +38,4 @@ td {
   height: 64px;
   width: 66px;
   border-radius: 50%;
-}
-
-.square:focus {
-  outline: none;
-}
-
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-.game {
-  display: block;
-  flex-direction: column;
-}
-
-.game-info {
-  margin-left: 20px;
 }

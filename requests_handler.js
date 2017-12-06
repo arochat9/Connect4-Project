@@ -1,4 +1,4 @@
-const users = require('./users.js'); 
+const users = require('./users.js');
 const {io} = require('./app.js');
 const game = require('./game.js');
 
@@ -85,22 +85,3 @@ exports.take_move = function(data, socket){
    io.in(user.room).emit('game:take_move', {color: user.color, x: pos, y: pos });
    // socket.on( 'game:take_move', (data) => requests.take_move(data, socket) );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
