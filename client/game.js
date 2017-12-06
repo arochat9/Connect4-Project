@@ -25,7 +25,7 @@ const Board = React.createClass({
      this.setState({secondsLeft: this.state.secondsLeft - 1});
      if (this.state.secondsLeft <= 0) {
        clearInterval(this.interval);
-       button_clicked(Math.floor(Math.random() * 7));
+       this.button_clicked(Math.floor(Math.random() * 7));
      }
    },
    componentDidMount(){
