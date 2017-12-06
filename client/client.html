@@ -4,13 +4,16 @@
    <!-- look into  attr scrollTop -->
    <title>Connect 4!</title>
    <link rel='stylesheet' type='text/css' href='client.css' />
+   <link rel='stylesheet' type='text/css' href='game.css' />
    <script src='/socket.io/socket.io.js'></script>
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.22.1/babel.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
    <script src='lobby.js' type='text/babel'></script>
-   <script src='client.js'></script>
+   <script src='game.js' type='text/babel'></script>
+   <script src='client.js' type='text/babel'></script>
+   <script src='clientOLD.js'></script>
 </head>
 
 <body>
@@ -20,7 +23,7 @@
       <input type=password id=login_popup-password placeholder='Password (not working)' /><br>
       <button type=submit id=login_popup-submit>login</button>
    </form>
-   <div id=lobby />
    <div id=connect4 />
+   <div id=lobby />
 </body>
 </html>

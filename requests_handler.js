@@ -47,8 +47,23 @@ exports.user_joined = function(socket){
       if( ouser !== user.username )
          socket.emit('userlist:user_joined', { username: ouser });
    }
+   socket.emit('game:start', { color: 'yellow' });
 }
 
+exports.start_game = function(data, socket){
+   socket.emit('game:start', { color: 'yellow' });
+   socket.to(room).emit('game:start', { color: 'red' });
+}
+
+exports.take_move = function(data, socket){
+   var user = users.from_socket(socket);
+   if( !user )
+      return;
+   var pos = data.pos;
+   console.log(`Player ${user.username} took a move at ${pos}`);
+   io.in(user.room).emit('game:take_move', {player: user.username, x: pos, y: pos });
+   // socket.on( 'game:take_move', (data) => requests.take_move(data, socket) );
+}
 
 
 

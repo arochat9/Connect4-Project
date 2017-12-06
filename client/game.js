@@ -1,22 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import './game.css';
 
 const XDIMENSION = 7;
 const YDIMENSION = 6;
 
-function socketioEmit(props) {
-  //EMIT INFO TO SERVER
-}
 
-class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      squares: Array(42).fill(null),
-      xIsNext: true,
-    };
-  }
+const Board = React.createClass({
+   getInitialState() {
+      return { squares: Array(42).fill(null), xIsNext: true };
+   },
+
+   componentDidMount() {
+      socketio.emit('userlist:startup');
+      socketio.on('game:take_move', this.move_taken);
+   },
+
+   move_taken(data){
+      var x = data.x, y = data.y, player = data.player;
+      console.log("Player '" + player + "' took a move at (" + x + ',' + y + ')');
+   },
 
   clicker(i) {
     const squares = this.state.squares.slice();
@@ -26,21 +29,21 @@ class Board extends React.Component {
       squares: squares,
       xIsNext: !this.state.xIsNext,
     });
-  }
-
+  },
+  button_clicked(pos, event){
+      socketio.emit('game:take_move', { pos });
+      this.clicker(pos);
+  },
   renderCol(i) {
     return (
-      <button className = "column" onClick={() => {
-        socketioEmit(i)
-        this.clicker(i)
-      }}>
+      <button className = "column" onClick={ event => this.button_clicked(i, event) }>
       </button>
       // <ColumnCreater
       //   value={this.state.squares[i]}
       //   onClick={() => this.clicker(i)}
       // />
     );
-  }
+  },
 
   render() {
     let status = 'Next player: ' + (this.state.xIsNext ? 'Yellow' : 'Red');
@@ -59,8 +62,9 @@ class Board extends React.Component {
      </div>
    );
   }
-}
-class Circles extends React.Component {
+});
+
+const Circles = React.createClass({
 
   render() {
 
@@ -68,9 +72,9 @@ class Circles extends React.Component {
     for (let x = 0; x < YDIMENSION; x++){
       let circleCells = [];
       for (let y = 0; y < XDIMENSION; y++){
-        circleCells.push(<td id="${x} ${y}"></td>);
+        circleCells.push(<td key={y*10+x} id="${x} ${y}"></td>);
       }
-      rows.push(<tr id={x}>{circleCells}</tr>)
+      rows.push(<tr key={x} id={x}>{circleCells}</tr>)
     }
 
     return (
@@ -81,10 +85,10 @@ class Circles extends React.Component {
        </table>
     );
   }
-}
+});
 
 
-class Game extends React.Component {
+const Game = React.createClass({
   render() {
     return (
       <div className="game">
@@ -99,11 +103,11 @@ class Game extends React.Component {
       </div>
     );
   }
-}
+});
 
 // ========================================
 
-ReactDOM.render(
-  <Game />,
-  document.getElementById('root')
-);
+
+function startup_game_window(username){
+   ReactDOM.render(<Game />, document.getElementById('connect4') );
+}

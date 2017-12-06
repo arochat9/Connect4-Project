@@ -7,6 +7,7 @@ io.sockets.on('connection', function(socket){
    socket.on( 'chat:message',  data => requests.chat_message(data, socket) );
    socket.on( 'userlist:startup', () => requests.user_joined(socket) );
    socket.on( 'disconnect', () => requests.user_left(socket) );
+   socket.on( 'game:take_move', (data) => requests.take_move(data, socket) );
 });
 
 console.log('Started up.');

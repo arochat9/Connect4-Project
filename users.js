@@ -2,11 +2,21 @@ class User {
    constructor(username, socket, room='global'){
       this.username = username;
       this.socket = socket;
-      socket.join(room);
-      this._room = room; // todo: this
+      this.room = room;
+   }
+   set room(room){
+      this._room = room;
+      this.socket.join(room);
    }
    get room(){
       return this._room;
+   }
+   start_game(color, room){
+      this.color = color;
+      this.room = room;
+   }
+   get color(){
+      return this.color;
    }
 }
 

@@ -141,7 +141,6 @@ const Lobby = React.createClass({
 
 function startup_global_chat(username){
    ReactDOM.render(<Lobby username={username}/>, document.getElementById('lobby') );
-
 }
 
 function shutdown_global_chat(){

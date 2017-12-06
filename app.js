@@ -5,7 +5,7 @@ const socketio = require('socket.io');
 
 const app = http.createServer(function(req, resp){
    var file_to_serve = 'client';
-   if( req.url[0] === '/' && (req.url.endsWith(".js") || req.url === "/client.css" ))
+   if( req.url[0] === '/' && (req.url.endsWith(".js") || req.url.endsWith('.css')))
       file_to_serve += req.url;
    else
       file_to_serve += '/client.html';
