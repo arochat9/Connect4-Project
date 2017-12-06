@@ -1,11 +1,3 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import './game.css';
-//var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-//const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-//import React, { PropTypes } from 'react';
-//import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 const XDIMENSION = 7;
 const YDIMENSION = 6;
@@ -137,14 +129,10 @@ const Circles = React.createClass({
       for (let y = 0; y < XDIMENSION; y++){
         var idCords = `${x}${y}`;
         if(gameBoardArray[x][y] == 'red') {
-          circleCells.push(<ReactCSSTransitionGroup transitionName="anim" transitionAppear={true} transitionAppearTimeout={1000} transitionEnter={false} transitionLeave={false}>
-          <td key={y*10+x} style={redStyle} ref={idCords}></td>
-        </ReactCSSTransitionGroup>);
+          circleCells.push(<td key={y*10+x} style={redStyle} ref={idCords}></td>);
         }
         else if(gameBoardArray[x][y] == 'yellow') {
-          circleCells.push(<ReactCSSTransitionGroup transitionName="anim" transitionAppear={true} transitionAppearTimeout={1000} transitionEnter={false} transitionLeave={false}>
-          <td key={y*10+x} style={yellowStyle} ref={idCords}></td>
-          </ReactCSSTransitionGroup>);
+          circleCells.push(<td key={y*10+x} style={yellowStyle} ref={idCords}></td>);
         }
         else {
           circleCells.push(<td key={y*10+x} style={whiteStyle} ref={idCords}></td>);
