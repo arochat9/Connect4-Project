@@ -8,13 +8,13 @@ class Game {
       return ret;
    }
 
-   static matchmake(p1, p2){
+   static matchmake(p1, p2){//creating a new match
       p1.servermsg_room(`New game started between '${p1.username}' and '${p2.username}'.`);
       var game = new Game(p1, p2);
       __games[game.room] = game;
    }
 
-   constructor(p1, p2){
+   constructor(p1, p2){//constructor for setting up server side for new game
       this.room = 'game_' + Game.next_game_id();
       this.p1 = p1;
       this.p2 = p2;
@@ -24,7 +24,6 @@ class Game {
       this.current = p1;
    }
    check_for_win(){
-     console.log("board[4][0]="+this.board[4][0]);
       //vertical winnning --> board[][]
       for(let horiz = 0; horiz < this.board.length; horiz++) {
         for(let counter = 0; counter < 3; counter++) {
@@ -72,8 +71,8 @@ class Game {
         }
       }
       //regular diagonal winnning
-      for(let vert = 0; vert < 3; vert++) {
-        for(let horiz = 0; horiz < this.board.length-3; horiz++) {
+      for(let vert = 0; vert < this.board.length-3; vert++) {
+        for(let horiz = 0; horiz < 3; horiz++) {
           let temp = this.board[vert][horiz];
           if(temp === this.board[vert+1][horiz+1] && temp === this.board[vert+2][horiz+2]
              && this.board[vert+3][horiz+3]) {
@@ -93,8 +92,8 @@ class Game {
         }
       }
       //backwards diagonal winning
-      for(let vert = 0; vert < 3; vert++) {
-        for(let horiz = 3; horiz < this.board.length; horiz++) {
+      for(let vert = 0; vert < this.board.length-3; vert++) {
+        for(let horiz = 3; horiz < 6; horiz++) {
           let temp = this.board[vert][horiz];
           if(temp === this.board[vert+1][horiz-1] && temp === this.board[vert+2][horiz-2]
              && this.board[vert+3][horiz-3]) {

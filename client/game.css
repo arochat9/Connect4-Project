@@ -25,6 +25,15 @@ ol, ul {
   border-radius: 0%;
 }
 
+.anim-appear {
+  opacity: 0.01;
+}
+
+.anim-appear.anim-appear-active{
+  opacity: 2;
+  transition: opacity 1s ease-in;
+}
+
 td {
   pointer-events: none;
   position: relative;

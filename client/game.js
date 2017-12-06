@@ -1,6 +1,11 @@
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 // import './game.css';
+//var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+//const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+//import React, { PropTypes } from 'react';
+//import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 const XDIMENSION = 7;
 const YDIMENSION = 6;
@@ -24,10 +29,11 @@ const Board = React.createClass({
         secondsLeft: 0
       };
    },
-   tick: function() {
+   tick: function() {//when timer runs out player goes in a random spot
      this.setState({secondsLeft: this.state.secondsLeft - 1});
      if (this.state.secondsLeft <= 0) {
        clearInterval(this.interval);
+       button_clicked(Math.floor(Math.random() * 7));
      }
    },
    componentDidMount(){
@@ -58,7 +64,7 @@ const Board = React.createClass({
      clearInterval(this.interval);
   },
 
-  button_clicked(pos, event){
+  button_clicked(pos){
     if(this.state.turn === true) {
       this.state.secondsLeft = 20;
       socketio.emit('game:move', { pos });
@@ -69,7 +75,7 @@ const Board = React.createClass({
   },
   renderCol(i) {
     return (
-      <button className = "column" onClick={ event => this.button_clicked(i, event) }>
+      <button className = "column" onClick={ event => this.button_clicked(i) }>
       </button>
     );
   },
@@ -131,10 +137,14 @@ const Circles = React.createClass({
       for (let y = 0; y < XDIMENSION; y++){
         var idCords = `${x}${y}`;
         if(gameBoardArray[x][y] == 'red') {
-          circleCells.push(<td key={y*10+x} style={redStyle} ref={idCords}></td>);
+          circleCells.push(<ReactCSSTransitionGroup transitionName="anim" transitionAppear={true} transitionAppearTimeout={1000} transitionEnter={false} transitionLeave={false}>
+          <td key={y*10+x} style={redStyle} ref={idCords}></td>
+        </ReactCSSTransitionGroup>);
         }
         else if(gameBoardArray[x][y] == 'yellow') {
-          circleCells.push(<td key={y*10+x} style={yellowStyle} ref={idCords}></td>);
+          circleCells.push(<ReactCSSTransitionGroup transitionName="anim" transitionAppear={true} transitionAppearTimeout={1000} transitionEnter={false} transitionLeave={false}>
+          <td key={y*10+x} style={yellowStyle} ref={idCords}></td>
+          </ReactCSSTransitionGroup>);
         }
         else {
           circleCells.push(<td key={y*10+x} style={whiteStyle} ref={idCords}></td>);
