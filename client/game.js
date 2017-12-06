@@ -4,6 +4,8 @@
 
 const XDIMENSION = 7;
 const YDIMENSION = 6;
+var playerColor;
+var opponentColor;
 var gameBoardArray = [[],[]];
 
 const Board = React.createClass({
@@ -11,40 +13,49 @@ const Board = React.createClass({
       for(let i = 0; i<XDIMENSION; i++) {
         gameBoardArray[i]=[];
       }
+      playerColor = this.props.game_info.color;
+      if(playerColor === "red") opponentColor = "yellow";
+      else opponentColor = "red";
       return {
         status: "Playing against " + this.props.game_info.opponent + ". You are " +
-               this.props.game_info.color + ". " + this.props.game_info.starts + " starts",
+               this.props.game_info.color + ". " + this.props.game_info.starts + " is up.",
         squares: Array(42).fill(null),
-        xIsNext: true
+        xIsNext: true,
+        turn: this.props.game_info.color === this.props.game_info.starts
       };
    },
+   componentDidMount(){
+     this.props.setturn_callback( turn => {
+       if(turn) {
+         this.setState({
+           turn,
+           status: "Playing against " + this.props.game_info.opponent + ". You are " +
+                  this.props.game_info.color + ". " + playerColor + " is up.",
+         });
+       }
+       else {
+         this.setState({
+           turn,
+           status: "Playing against " + this.props.game_info.opponent + ". You are " +
+                  this.props.game_info.color + ". " + opponentColor + " is up.",
+         });
+       }
+     });
+   },
 
-  clicker(i) {
-    const squares = this.state.squares.slice();
-
-    squares[i] = this.state.xIsNext ? 'Yellow' : 'Red';
-    this.setState({
-      squares: squares,
-      xIsNext: !this.state.xIsNext,
-    });
-  },
   button_clicked(pos, event){
+    if(this.state.turn === true) {
       socketio.emit('game:move', { pos });
-      this.clicker(pos);
+      console.log("BUTTON PRESSED");
+      //this.clicker(pos);
+      this.state.turn = false;
+    }
   },
   renderCol(i) {
     return (
       <button className = "column" onClick={ event => this.button_clicked(i, event) }>
       </button>
     );
-  },
-
-  // = 'Next player: ' + (this.state.xIsNext ? 'Yellow' : 'Red');
-  componentDidMount() {
-    // });
-  },
-  componentWillUnmount() {
-    console.log("unmounting");
   },
 
   render() {
@@ -88,12 +99,18 @@ const Circles = React.createClass({
      console.log(color+" color took a move at (" + x + ',' + y + ')');
      this.circles = new Circles();
      this.forceUpdate();
+     if(playerColor != color) {
+       this.props.set_turn(true);
+     }
+     else {
+       this.props.set_turn(false);
+     }
   },
 
   render() {
 
     let rows = [];
-    for (let x = 0; x < YDIMENSION; x++){
+    for (let x = YDIMENSION-1; x >= 0; x--){
       let circleCells = [];
       for (let y = 0; y < XDIMENSION; y++){
         var idCords = `${x}${y}`;
@@ -122,11 +139,21 @@ const Circles = React.createClass({
 
 
 const Game = React.createClass({
+  getInitialState() {
+    return {turn_callback: undefined};
+  },
+  set_turn(turn){
+    console.log("SET TURN METHOD WAS CALLED. turn set to: "+turn);
+    this.state.turn_callback(turn);
+  },
+  setturn_callback(turn_callback){
+    this.setState({ turn_callback });
+  },
   render() {
     return (
       <div className="game-board">
-        <Board game_info={ this.props.game_info } />
-        <Circles />
+        <Board game_info={ this.props.game_info } setturn_callback={this.setturn_callback}/>
+        <Circles set_turn={this.set_turn}/>
       </div>
     );
   }
