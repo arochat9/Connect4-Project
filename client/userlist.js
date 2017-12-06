@@ -7,9 +7,9 @@ const User = React.createClass({
 });
 
 const UserList = React.createClass({
-   getInitialState() {
-      return { users:[] };
-   },
+   // getInitialState() {
+   //    return { users:[] };
+   // },
 
    componentDidMount() {
       socketio.emit('userlist:startup');
@@ -18,17 +18,17 @@ const UserList = React.createClass({
    },
 
    user_joined(user){
-      var users = this.state.users;
+      var users = this.props.users_online.map(x => x);
       console.log("User joined: " + JSON.stringify(user));
       users.push(user);
-      this.setState({ users });
+      this.props.update_users_online(users);
    },
 
    user_left(user){
-      var users = this.state.users;
+      var users = this.props.users_online.map(x => x);
       console.log("User left: " + JSON.stringify(user));
       users.splice(users.indexOf(user), 1);
-      this.setState({ users });
+      this.props.update_users_online(users);
    },
 
 
@@ -41,7 +41,7 @@ const UserList = React.createClass({
                      : <span>in <strong>{this.props.chatroom}</strong></span>
                }</h3>
             <ul> {
-               this.state.users.map((user, i) => (
+               this.props.users_online.map((user, i) => (
                   <li key={i}>
                      <User username={user.username} />
                   </li>

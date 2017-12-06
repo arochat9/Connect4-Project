@@ -158,8 +158,27 @@ class Game {
 Game.__next_game_id = 0;
 const __games = {};
 
-
 const random_users_queue = [];
+const friends_queue = {};
+
+exports.matchmake_friend = function(user, data){
+   var friend = data.username;
+   var friend_user = users.from_username(friend);
+   if( friends_queue[friend] === user.username ){
+      delete friends_queue[friend];
+      Game.matchmake(friend_user, user);
+      return;
+   }
+   if( !friend_user )
+      console.log("Friend didn't exist");
+   else if( friend_user.game )
+      console.log("Friend is in a game");
+   else {
+      friends_queue[user.username] = friend_user.username;
+      friend_user.servermsg_private(`User '${user.username}' Invites you to join a game!`);
+      user.servermsg_private(`You invited '${friend_user.username}' to join a game!`);
+   }
+}
 
 exports.matchmake_random = function(user){
    if( user.game )
@@ -177,3 +196,4 @@ exports.matchmake_random = function(user){
       random_users_queue.push( user );
    }
 }
+

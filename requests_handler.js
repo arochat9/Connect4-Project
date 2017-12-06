@@ -26,6 +26,7 @@ exports.login_attempt = function(data, socket) {
       socket.emit('login:result', { result: 'success', username });
       console.log(`User '${username}' logged in.`);
       socket.on( 'game:random', () => game.matchmake_random(user) );
+      socket.on( 'game:friend', data => game.matchmake_friend(user, data) );
       socket.on( 'chat:message',  data => chat_message(data, socket) );
       socket.on( 'chat:private',  data => private_message(data, socket) );
    }
