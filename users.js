@@ -42,13 +42,14 @@ class User {
 const users = {};
 
 
-exports.add_user = function(username, socket){
+exports.add_user = function(username, password, socket){
    if( username == false || !username.match(/^\w+$/) ) // ie empty string, undefined, whatever
       return 'Invalid username';
-   if( !username.match(/^\w{5,}$/))
+   else if( !username.match(/^\w{5,}$/))
       return 'Too short of a username!';
    else if( users[socket.id] || exports.from_username(username) )
       return `User '${username}' already is logged in.`;
+   // else if( !)
    else
       return users[socket.id] = new User(username, socket);
 }
@@ -66,4 +67,25 @@ exports.from_username = function(username){
    for( var socketid in users )
       if(users[socketid].username === username)
          return users[socketid];
+}
+
+
+
+
+
+///
+const fs = require("fs");
+
+const user_data = {}
+
+exports.read_users = function(datafile){
+   fs.readFileSync(datafile).toString().split('\n').forEach( line => {
+      var match = line.match(/^(\w+):(\w+):(\w+(?:,\w+)*|)$/);
+      if( !match ){
+         console.error(`Invalid line! ${line}`);
+         return;
+      }
+      let [_, username, password, friends] = match;
+      user_data[username] = { password, friends };
+   });
 }

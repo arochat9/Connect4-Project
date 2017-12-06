@@ -3,8 +3,8 @@ const {io} = require('./app.js');
 const game = require('./game.js');
 
 exports.login_attempt = function(data, socket) {
-   var username = data.username;
-   var result = users.add_user(username, socket);
+   var {username, password} = data;
+   var result = users.add_user(username, password, socket);
    if( typeof result === 'string' ){
       socket.emit('login:result', { result: 'failure', reason: result });
       console.log(`Couldn't log in user '${username}': ${result}`);
@@ -65,9 +65,18 @@ user_joined = function(socket){
    var clients = io.sockets.adapter.rooms[user.room].sockets;
 
    for(var socket_id in clients){
-      var other = users.from_socket(io.sockets.connected[socket_id]).username;
-      if( other !== user.username )
-         socket.emit('userlist:user_joined', { username: other });
+      var their_socket = io.sockets.connected[socket_id];
+      if( !their_socket ){
+         console.error("We have an undefined person in the chatroom?? (1)");
+         continue;
+      }
+      var other = users.from_socket(their_socket);
+      if( !other ){
+         console.error("We have an undefined person in the chatroom?? (2)");
+         continue;
+      }
+      if( other.username !== user.username )
+         socket.emit('userlist:user_joined', { username: other.username });
    }
 }
 

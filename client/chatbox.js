@@ -24,6 +24,7 @@ const PublicMessage = React.createClass({
 });
 
 
+const MAX_MESSAGE_LENGTH = 50;
 const ChatLog = React.createClass({
    getInitialState() {
       return { messages:[] };
@@ -39,6 +40,8 @@ const ChatLog = React.createClass({
       var {username, text} = message;
       console.log(`User '${username}' said: ${text}`);
       messages.push({ username, text });
+      if( messages.length > MAX_MESSAGE_LENGTH )
+         messages.splice(0, 1);
       this.setState({ messages });
    },
    receive_private(message){
@@ -53,7 +56,7 @@ const ChatLog = React.createClass({
          <div className='chatlog-container'>
             <h3 className='chatlog-title'>Messages</h3>
             <ul className='chatlog-messages'>{
-               this.state.messages.map((msg, i) => 
+               this.state.messages.map(x => x).reverse().map((msg, i) => 
                   msg.from
                      ? ( <PrivateMessage key={i} from={msg.from} to={msg.to} text={msg.text} />)
                      : ( <PublicMessage key={i} username={msg.username} text={msg.text} />
