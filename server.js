@@ -6,6 +6,7 @@ io.sockets.on('connection', function(socket){
    socket.on( 'startup', _ => { /* nothing for now */ } );
    socket.on( 'login:attempt', data => requests.login_attempt(data, socket) );
    socket.on( 'disconnect', () => requests.user_left(socket) );
+   socket.on( 'userlist:startup', () => requests.user_joined(socket) );
 });
 
 console.log('Started up.');

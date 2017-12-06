@@ -15,7 +15,6 @@ exports.login_attempt = function(data, socket) {
       socket.on( 'game:random', () => game.matchmake_random(user) );
       socket.on( 'chat:message',  data => chat_message(data, socket) );
       socket.on( 'chat:private',  data => private_message(data, socket) );
-      socket.on( 'userlist:startup', () => user_joined(socket) );
    }
 }
 
@@ -57,7 +56,7 @@ exports.user_left = function(socket){
    users.delete_socket(socket);
 }
 
-user_joined = function(socket){
+exports.user_joined = function(socket){
    var user = users.from_socket(socket);
    if( !user )
       return;

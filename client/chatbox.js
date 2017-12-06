@@ -69,11 +69,12 @@ const ChatLog = React.createClass({
 
 const MessageBox = React.createClass({
    getInitialState(){
-      return {text: ''}
+      return { text: '', chatroom: null };
    },
 
    componentDidMount(){
       socketio.emit('chat:startup');
+      socketio.on('chat:room:change', data => this.setState({ chatroom: data.room }));
    },
 
    submit(event){
@@ -95,9 +96,9 @@ const MessageBox = React.createClass({
       return (
          <div>
             <h2>Hello, <User username={this.props.username} />. {
-               this.props.chatroom === 'global' || this.props.chatroom === undefined
+               (this.state.chatroom === null || this.state.chatroom === 'global')
                   ? '' 
-                  : <span>You are talking in <strong>{this.props.chatroom}</strong></span>
+                  : <span>You are talking in <strong>{this.state.chatroom}</strong></span>
                }</h2>
                <p>Hint: to message someone, type <code>/w username message</code></p>
             <form onSubmit={this.submit}>

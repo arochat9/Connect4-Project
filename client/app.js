@@ -9,6 +9,7 @@ const Lobby = React.createClass({
       );
    }   
 })
+
 const App = React.createClass({
    getInitialState(){
       return {
@@ -49,6 +50,7 @@ const App = React.createClass({
       console.log("Attempting to log in as " + username + "");
       socketio.emit('login:attempt', { username, password });
       socketio.on('login:result', data => {
+         
          switch( data.result ){
             case 'success':
                this.setState({

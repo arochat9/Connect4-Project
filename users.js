@@ -4,22 +4,24 @@ const {io} = require('./app.js');
 
 const fs = require("fs");
 
-const user_data = {}
+const saved_users = {}
 
-exports.read_users = function(datafile){
+function get_users(datafile){
+   var users = {};
    fs.readFileSync(datafile).toString().split('\n').forEach( line => {
       var match = line.match(/^(\w+):(\w+):(\w+(?:,\w+)*|)$/);
       if( !match ){
          console.error(`Invalid line! ${line}`);
          return;
       }
-      let [_, username, password, friends] = match;
-      user_data[username] = { password, friends };
+      var [_, username, password, friends] = match;
+      users[username] = { password, friends };
    });
+   return users;
 }
 
-
 const DEFAULT_CHATROOM = 'global';
+const DEFAULT_USERS_FILE = './data/users.data';
 
 class User {
    constructor(username, socket, room=DEFAULT_CHATROOM){
@@ -29,6 +31,7 @@ class User {
    }
    set room(room){
       this._room = room;
+      this.socket.emit('chat:room:change', { room });
       this.socket.join(room);
    }
    get room(){
@@ -63,34 +66,38 @@ class User {
    }
 }
 
-const users = {};
+const logged_in_users = {};
 
 
 exports.add_user = function(username, password, socket){
+   var all_users = get_users(DEFAULT_USERS_FILE);
    if( username == false || !username.match(/^\w+$/) ) // ie empty string, undefined, whatever
       return 'Invalid username';
    else if( !username.match(/^\w{5,}$/))
       return 'Too short of a username!';
-   else if( users[socket.id] || exports.from_username(username) )
+   else if( logged_in_users[socket.id] || exports.from_username(username) )
       return `User '${username}' already is logged in.`;
-   // else if( !)
+   else if( !all_users[username] )
+      return `User '${username}' doesnt exist.`;
+   else if( all_users[username].password !== password )
+      return `Invalid password.`;
    else
-      return users[socket.id] = new User(username, socket);
+      return logged_in_users[socket.id] = new User(username, socket);
 }
 
 exports.delete_socket = function(socket){
-   delete users[socket.id];
+   delete logged_in_users[socket.id];
 }
 
 exports.from_socket = function(socket){
    if( socket.id )
-      return users[socket.id];
+      return logged_in_users[socket.id];
 }
 
 exports.from_username = function(username){
-   for( var socketid in users )
-      if(users[socketid].username === username)
-         return users[socketid];
+   for( var socketid in logged_in_users )
+      if(logged_in_users[socketid].username === username)
+         return logged_in_users[socketid];
 }
 
 
