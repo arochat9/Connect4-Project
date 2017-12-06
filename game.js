@@ -18,7 +18,7 @@ class Game {
       this.room = 'game_' + Game.next_game_id();
       this.p1 = p1;
       this.p2 = p2;
-      this.board = [[], [], [], [], [], []];
+      this.board = [[], [], [], [], [], [], []];
       p1.new_game(this, p2.username, 'red', true);
       p2.new_game(this, p1.username, 'yellow', false);
       this.current = p1;
@@ -34,7 +34,7 @@ class Game {
          return;
       var x = col, y = this.board[x].length;
       this.board[col].push( pl.game.color );
-      io.to(this.room).emit('game:move', { x, y });
+      io.to(this.room).emit('game:move', { x, y, color: pl.game.color });
       console.log(`Player ${this.current.username} went at: (${x}, ${y}).`);
       this.check_for_win();
       if( this.current === this.p1 ){

@@ -70,14 +70,14 @@ const Circles = React.createClass({
 
   componentDidMount() {
      socketio.emit('game:startup');
-     socketio.on('game:take_move', this.move_taken);
+     socketio.on('game:move', this.move_taken);
   },
 
   move_taken(data){
-     var x = data.x, y = data.y, player = data.color;
-     //console.log("Player '" + player + "' took a move at (" + x + ',' + y + ')');
-     gameBoardArray[x][y] = player;
-     console.log(player+" player took a move at (" + x + ',' + y + ')');
+     var {x, y, color} = data;
+     //console.log("Player '" + color + "' took a move at (" + x + ',' + y + ')');
+     gameBoardArray[7-y][x] = color;
+     console.log(color+" color took a move at (" + x + ',' + y + ')');
      this.circles = new Circles();
      this.forceUpdate();
   },
