@@ -12,6 +12,7 @@ const Board = React.createClass({
         gameBoardArray[i]=[];
       }
       return {
+        status: "",
         squares: Array(42).fill(null),
         xIsNext: true
       };
@@ -37,11 +38,26 @@ const Board = React.createClass({
     );
   },
 
+  // = 'Next player: ' + (this.state.xIsNext ? 'Yellow' : 'Red');
+  componentDidMount() {
+    console.log("BOARD COMPONENT MOUNTED");
+    socketio.emit('game:startup');
+    // socketio.on('game:begin', this.function(data) {
+    socketio.on('game:begin', 2345);
+    //   console.log("Recieved initial data");
+    //   //this.state.status = "Playing against "+data.opponent+".  You are "+data.color+".  "+data.starts+" starts.";
+    //   this.setState({status: "Playing against "+data.opponent+".  You are "+data.color+".  "+data.starts+" starts."});
+    //   socketio.off('game:begin');
+    // });
+  },
+  componentWillUnmount() {
+    console.log("unmounting");
+  },
+
   render() {
-    let status = 'Next player: ' + (this.state.xIsNext ? 'Yellow' : 'Red');
     return (
      <div>
-       <div className="status">{status}</div>
+       <div className="status">{this.state.status}</div>
        <div className="board-row">
          {this.renderCol(0)}
          {this.renderCol(1)}
@@ -69,14 +85,13 @@ const whiteStyle = {
 const Circles = React.createClass({
 
   componentDidMount() {
-     socketio.emit('game:startup');
      socketio.on('game:move', this.move_taken);
   },
 
   move_taken(data){
      var {x, y, color} = data;
      //console.log("Player '" + color + "' took a move at (" + x + ',' + y + ')');
-     gameBoardArray[7-y][x] = color;
+     gameBoardArray[y][x] = color;
      console.log(color+" color took a move at (" + x + ',' + y + ')');
      this.circles = new Circles();
      this.forceUpdate();
