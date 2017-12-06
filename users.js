@@ -15,9 +15,6 @@ class User {
       this.color = color;
       this.room = room;
    }
-   get color(){
-      return this.color;
-   }
 }
 
 const users = {};
@@ -27,7 +24,7 @@ exports.add_user = function(username, socket){
       return `Invalid username ${username}`;
    else if( users[socket.id] )
       return `User '${username}' already is logged in.`;
-   else 
+   else
       return users[socket.id] = new User(username, socket);
 }
 
@@ -38,15 +35,3 @@ exports.delete_socket = function(socket){
 exports.from_socket = function(socket){
    return users[socket.id];
 }
-
-
-
-
-
-
-
-
-
-
-
-

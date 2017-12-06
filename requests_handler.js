@@ -1,4 +1,4 @@
-const users = require('./users.js'); 
+const users = require('./users.js');
 const {io} = require('./app.js');
 
 exports.login_attempt = function(data, socket) {
@@ -47,6 +47,7 @@ exports.user_joined = function(socket){
       if( ouser !== user.username )
          socket.emit('userlist:user_joined', { username: ouser });
    }
+   user.start_game('yellow', 'global');
    socket.emit('game:start', { color: 'yellow' });
 }
 
@@ -61,25 +62,6 @@ exports.take_move = function(data, socket){
       return;
    var pos = data.pos;
    console.log(`Player ${user.username} took a move at ${pos}`);
-   io.in(user.room).emit('game:take_move', {player: user.username, x: pos, y: pos });
+   io.in(user.room).emit('game:take_move', {color: user.color, x: pos, y: pos });
    // socket.on( 'game:take_move', (data) => requests.take_move(data, socket) );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
