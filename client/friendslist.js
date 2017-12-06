@@ -61,6 +61,10 @@ const FriendsList = React.createClass({
    onchange(event){
       this.setState({ friend_name : event.target.value });
    },
+   join_game(event, username){
+      event.preventDefault();
+      socketio.emit('game:friend', { username });
+   },
 
    render(){
       return (
@@ -70,6 +74,10 @@ const FriendsList = React.createClass({
                this.state.friends.map((username, i) => (
                   <li key={i}>
                      <Friend username={username} />
+                     { this.props.in_game(username) /*this.props.user_is_online(username)*/
+                        ? null
+                        : <button onClick={ event => this.join_game(event, username) }>play</button>
+                     }
                   </li>
                ))}
             </ul>

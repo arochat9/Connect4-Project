@@ -1,14 +1,41 @@
 const Lobby = React.createClass({
+   getInitialState(){
+      return { users_online: [] };
+   },
    logout(_){
       window.location.reload(false); 
+   },
+   // componentDidMount(){
+   //    socketio.on('game:friend:invite', friend => {
+   //       this.props.friend_game()
+   //    });.socket.servermsg_privte(`User '${user.username}' Invites you to join a game!`);
+   // }
+   user_is_online(user){
+      return this.state.users_online.indexOf(user) !== -1;
+   },
+   update_users_online(users_online){
+      this.setState({ users_online });
+   },
+   random_game(event){
+      event.preventDefault();
+      socketio.emit('game:random');
    },
    render(){
       return (
          <div>
             <button onClick={ this.logout }>logout</button>
-            <button onClick={ this.props.rand_game }>random game</button>
-            <FriendsList /> 
-            <UserList chatroom={this.props.chatroom} username={this.props.username} />
+            <button onClick={ this.random_game }>random game</button>
+
+            <FriendsList
+               user_is_online={ this.user_is_online }
+               in_game={ this.props.in_game }
+            /> 
+            <UserList
+               chatroom={this.props.chatroom}
+               username={this.props.username}
+               users_online={ this.state.users_online }
+               update_users_online={ this.update_users_online }
+            />
             <ChatBox chatroom={this.props.chatroom} username={this.props.username} />
          </div>
       );
@@ -30,11 +57,6 @@ const App = React.createClass({
    componentDidMount() {
       socketio.emit('startup');
       console.info('Webpage loaded');
-   },
-
-   rand_game(event){
-      event.preventDefault();
-      socketio.emit('game:random');
       socketio.on('game:begin', data => {
          var {opponent, color, starts, chatroom} = data;
          this.setState({
@@ -50,7 +72,6 @@ const App = React.createClass({
          });
       })
    },
-
 
    register_attempt(username, password, on_err, on_success){
       console.log("Attempting to register as " + username + "");
@@ -111,7 +132,7 @@ const App = React.createClass({
                <Lobby
                   username={this.state.username}
                   chatroom={this.state.chatroom}
-                  rand_game={this.rand_game}
+                  in_game={ () => this.state.game }
                /> : null }
          </div>
       );
